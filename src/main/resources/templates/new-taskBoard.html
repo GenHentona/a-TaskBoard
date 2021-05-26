@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>タスクボード作成</title>
+</head>
+<body>
+
+<h2>タスクボード作成</h2>
+
+
+<form action="/newTaskBoard" method="post">
+　　　タスクボード名：
+	<input type="text" name="tbName">
+	<input type="submit" value="作成">
+	<br>
+	<span th:text="${message}" style="color:red"></span>
+</form>
+
+
+</body>
+</html>

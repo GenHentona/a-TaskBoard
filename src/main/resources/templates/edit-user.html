@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>ユーザ情報変更</title>
+</head>
+<body>
+
+<h2>ユーザ情報変更</h2>
+
+<form action="/editUser" method="post">
+	新しいユーザ名：
+	<input type="text" name="userName"><br>
+	新しいログインID：
+	<input type="text" name="loginId"><br>
+	新しいパスワード：
+	<input type="password" name="password"><br>
+	
+	<input type="submit" value="変更">
+	<br>
+	<span th:text="${message}" style="color:red"></span>
+</form>
+
+
+</body>
+</html>

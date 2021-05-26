@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>タスク追加</title>
+</head>
+<body>
+
+<h2>新しいタスクを作成してください</h2>
+
+<form action="/newTask" method="post">
+    　　タイトル：
+	<input type="text" name="title"><br>
+	作業内容：
+	<textarea name="contents"></textarea><br>
+	優先順位：
+	<input type="text" name="priority"><br>
+	作業量：
+	<input type="text" name="storyPoint"><br>
+	完了基準：
+	<textarea name="completionCriteria"></textarea><br>
+	<input type="submit" value="作成"> 
+	<br>
+</form>
+	<span th:text="${message}" style="color:red"></span>
+
+
+</body>
+</html>

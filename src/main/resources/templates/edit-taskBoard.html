@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>タスクボード管理</title>
+</head>
+<body>
+
+<h2>タスクボード管理</h2>
+
+<!-- タスクボード名変更フォーム -->
+<form action="/editTBname" method="post">
+	タスクボード名の変更：
+	<input type="text" name="tbName">
+	<input type="submit" value="変更">
+	<br>
+	<span th:text="${message}" style="color:red"></span>
+</form>
+
+<!-- メンバー追加フォーム (現段階では一人ずつしかできない)-->
+<form action="/addMember" method="post">
+	メンバーの追加：
+	<input type="text" name="loginId">
+	<input type="submit" value="追加">
+	<br>
+	<span th:text="${message}" style="color:red"></span>
+</form>
+
+<!-- メンバー一覧 -->
+<table border="1">
+	<tr><th>名前<th>削除</tr>
+	<tr th:each="member:${group}">
+		<td th:text="${member.userId}">
+		<th><a th:href="'/deleteMember/'+${member.userId}">削除</a>
+	</tr>
+</table>
+
+</body>
+</html>

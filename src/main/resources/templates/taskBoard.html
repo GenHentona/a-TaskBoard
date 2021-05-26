@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>タスクボード</title>
+<style>
+    .flex {
+      display: flex;
+    }
+    
+    .table{
+    	width: 200px
+    }
+</style>
+</head>
+<body>
+
+<span th:text="${session.tbName}"></span>
+
+<!-- タスク作成ボタン -->
+<form action="/newTask" method="get">
+	<input type="submit" value="タスク作成">
+</form>
+
+<!-- マイページへ遷移するボタン -->
+<form action="/mypage" method="post">
+	<input type="submit" value="マイページへ">
+</form>
+
+<!-- タスクボード管理ボタン -->
+<form action="/editTB" method="post">
+	<input type="submit" value="タスクボード管理ページへ">
+</form>
+
+<!-- タスクボード表示 -->
+<div class="flex">
+<table border="1">
+<tr><th class="table">ToDo</tr>
+<tr th:each="task:${status1}">
+	<td>
+		<ul>
+			<li th:text="${task.title}">
+			<li th:text="${task.name}">
+			<li th:text="${task.contents}">
+			<li th:text="${task.priority}">
+			<li th:text="${task.storyPoint}">
+			<li th:text="${task.completionCriteria}">
+		</ul>
+		<!-- タスク編集ボタン -->
+		<form action="/editTask" method="get">
+			<input type="hidden" name="taskId" th:value="${task.id}">
+			<input type="submit" value="編集">
+		</form>
+		<!-- タスクステータス変更 -->
+		<form action="/editStatus" method="get">
+			<input type="hidden" name="taskId" th:value="${task.id}">
+			<input type="hidden" name="statusTest" value="2">
+			<input type="submit" value="Doingに変更">
+		</form>
+	</td>
+</tr>
+</table>
+<table border="1">
+<tr><th class="table">Doing</tr>
+<tr th:each="task:${status2}">
+	<td>
+		<ul>
+			<li th:text="${task.title}">
+			<li th:text="${task.name}">
+			<li th:text="${task.contents}">
+			<li th:text="${task.priority}">
+			<li th:text="${task.storyPoint}">
+			<li th:text="${task.completionCriteria}">
+		</ul>
+		<!-- タスクステータス変更 -->
+		<form action="/editStatus" method="get">
+			<input type="hidden" name="taskId" th:value="${task.id}">
+			<input type="hidden" name="statusTest" value="1">
+			<input type="submit" value="ToDoに変更">
+		</form>
+		<!-- タスク編集ボタン -->
+		<form action="/editTask" method="get">
+			<input type="hidden" name="taskId" th:value="${task.id}">
+			<input type="submit" value="編集">
+		</form>
+		<!-- タスクステータス変更 -->
+		<form action="/editStatus" method="get">
+			<input type="hidden" name="taskId" th:value="${task.id}">
+			<input type="hidden" name="statusTest" value="3">
+			<input type="submit" value="Doneに変更">
+		</form>
+	</td>
+</tr>
+</table>
+<table border="1">
+<tr><th class="table">Done</tr>
+<tr th:each="task:${status3}">
+	<td>
+		<ul>
+			<li th:text="${task.title}">
+			<li th:text="${task.name}">
+			<li th:text="${task.contents}">
+			<li th:text="${task.priority}">
+			<li th:text="${task.storyPoint}">
+			<li th:text="${task.completionCriteria}">
+		</ul>
+		<!-- タスクステータス変更 -->
+		<form action="/editStatus" method="get">
+			<input type="hidden" name="taskId" th:value="${task.id}">
+			<input type="hidden" name="statusTest" value="2">
+			<input type="submit" value="Doingに変更">
+		</form>
+		<!-- タスク編集ボタン -->
+		<form action="/editTask" method="get">
+			<input type="hidden" name="taskId" th:value="${task.id}">
+			<input type="submit" value="編集">
+		</form>
+	</td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

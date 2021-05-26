@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>マイページ</title>
+</head>
+<body>
+
+<span th:text="${session.userName}"></span>さん、お帰りなさい！
+
+<!-- タスクボード作成ボタン -->
+<form action="/newTaskBoard" method="get">
+	<input type="submit" value="タスクボード作成">
+</form>
+
+<!-- ユーザ情報変更ボタン -->
+<form action="/editUser" method="get">
+	<input type="submit" value="ユーザ情報変更">
+</form>
+
+<!-- 自身が所属するタスクボード一覧 -->
+
+<table border="1">
+	<caption>あなたが所属するタスクボード一覧</caption>
+	<tr><th>名前<th>削除</tr>
+	<tr th:each="list:${group}">
+		<td><a th:href="'/taskBoard/'+${list.boardId}"><span th:text="${list.boardId}"></span></a>
+		<td><a th:href="'/withdraw/'+${list.boardId}">削除</a>
+	</tr>
+</table><br>
+<span th:text="${message}" style="color:red"></span><br>
+
+
+<!-- ログアウトURL -->
+<a href="/logout">ログアウト</a>
+
+</body>
+</html>
