@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.demo.entity.AssignmentTasks;
 import com.example.demo.entity.Task;
+import com.example.demo.entity.TaskBoard;
+import com.example.demo.entity.User;
+import com.example.demo.repository.AssignmentTasksRepository;
 import com.example.demo.repository.TaskBoardRepository;
 import com.example.demo.repository.TaskRepository;
-//import com.example.demo.repository.TaskBoardRepository;
 import com.example.demo.repository.UserRepository;
 
 @Controller
@@ -31,6 +33,10 @@ public class TaskController {
 	@Autowired
 	TaskRepository taskRepository;
 	
+	@Autowired
+	AssignmentTasksRepository assignmentTasksRepository;
+	
+	
 	//タスク作成ボタンからタスク作成ページへ
 	@GetMapping(value="/newTask")
 	public ModelAndView newTask(ModelAndView mv) {
@@ -44,34 +50,36 @@ public class TaskController {
 			@RequestParam("title") String title,
 			@RequestParam("contents") String contents,
 			@RequestParam("priority") String priority,
-			@RequestParam(name="storyPoint", defaultValue="0") int storyPoint,
+			@RequestParam(name="storyPoint", defaultValue="0") String storyPoint,
 			@RequestParam("completionCriteria") String completionCriteria,
 			ModelAndView mv) {
 		//空欄があればエラー
 		if (title == null || title.length()==0 || 
 			contents == null || contents.length()==0 ||
 			priority == null || priority.length()==0 || 
-			storyPoint == 0 ||
+			storyPoint == null || storyPoint.length()==0 ||
 			completionCriteria == null || completionCriteria.length()==0) {
 			mv.addObject("message", "空欄があります。");
 			mv.setViewName("new-task");
 			return mv;
 		}
 		int status = 1;
-		int tbId = (int) session.getAttribute("tbId");
-		String userName = (String) session.getAttribute("userName");
+		int tbId = ((TaskBoard)session.getAttribute("taskBoardInfo")).getId();
 		
-		taskRepository.saveAndFlush(new Task(title, contents, priority, storyPoint, 
-				completionCriteria, status, tbId));
+		int taskId = taskRepository.saveAndFlush(new Task(title, contents, priority, storyPoint, 
+				completionCriteria, status, tbId)).getId();
+		assignmentTasksRepository.saveAndFlush(
+				new AssignmentTasks(taskId, ((User) session.getAttribute("userInfo")).getId()));
 		
-		List<Task> status1 = taskRepository.findByStatusAndBoardId(1, tbId);
-		List<Task> status2 = taskRepository.findByStatusAndBoardId(2, tbId);
-		List<Task> status3 = taskRepository.findByStatusAndBoardId(3, tbId);
+		List<Task> status1 = taskRepository.findByStatusAndBoardIdAndIsDeleted(1, tbId, 0);
+		List<Task> status2 = taskRepository.findByStatusAndBoardIdAndIsDeleted(2, tbId, 0);
+		List<Task> status3 = taskRepository.findByStatusAndBoardIdAndIsDeleted(3, tbId, 0);
+		
 		mv.addObject("status1", status1);
 		mv.addObject("status2", status2);
 		mv.addObject("status3", status3);
 		
-		mv.setViewName("taskBoard");
+		mv.setViewName("taskBoard");//re
 		return mv;
 	}
 	
@@ -91,31 +99,30 @@ public class TaskController {
 			@RequestParam("title") String title,
 			@RequestParam("contents") String contents,
 			@RequestParam("priority") String priority,
-			@RequestParam("storyPoint") int storyPoint,
+			@RequestParam("storyPoint") String storyPoint,
 			@RequestParam("completionCriteria") String completionCriteria,
 			@RequestParam("taskId") int taskId,
 			ModelAndView mv) {
 		//Task編集
-		Task a = taskRepository.findById(taskId);
-		int b = (int) session.getAttribute("userId");
-		a.setTitle(title);
-		a.setContents(contents);
-		a.setPriority(priority);
-		a.setStoryPoint(storyPoint);
-		a.setCompletionCriteria(completionCriteria);
-		a.setUpdatedAt();
-		a.setUpdatedBy(b);
-		taskRepository.saveAndFlush(a);
+		Task task = taskRepository.getOne(taskId);
+		task.setTitle(title);
+		task.setContents(contents);
+		task.setPriority(priority);
+		task.setStoryPoint(storyPoint);
+		task.setCompletionCriteria(completionCriteria);
+		task.setUpdatedAt();
+		task.setUpdatedBy(((User) session.getAttribute("userInfo")).getId());
+		taskRepository.saveAndFlush(task);
 		
-		int tbId = (int) session.getAttribute("tbId");
-		List<Task> status1 = taskRepository.findByStatusAndBoardId(1, tbId);
-		List<Task> status2 = taskRepository.findByStatusAndBoardId(2, tbId);
-		List<Task> status3 = taskRepository.findByStatusAndBoardId(3, tbId);
+		int tbId = ((TaskBoard)session.getAttribute("taskBoardInfo")).getId();
+		List<Task> status1 = taskRepository.findByStatusAndBoardIdAndIsDeleted(1, tbId, 0);
+		List<Task> status2 = taskRepository.findByStatusAndBoardIdAndIsDeleted(2, tbId, 0);
+		List<Task> status3 = taskRepository.findByStatusAndBoardIdAndIsDeleted(3, tbId, 0);
 		mv.addObject("status1", status1);
 		mv.addObject("status2", status2);
 		mv.addObject("status3", status3);
 		
-		mv.setViewName("taskBoard");
+		mv.setViewName("taskBoard");//re
 		return mv;
 	}
 	
@@ -126,19 +133,19 @@ public class TaskController {
 			@RequestParam("statusTest") String statusT,
 			ModelAndView mv) {
 		//Status変更
-		Task a = taskRepository.findById(taskId);
-		a.setStatus(Integer.parseInt(statusT));
-		taskRepository.saveAndFlush(a);
+		Task task = taskRepository.getOne(taskId);
+		task.setStatus(Integer.parseInt(statusT));
+		taskRepository.saveAndFlush(task);
 		
-		int tbId = (int) session.getAttribute("tbId");
-		List<Task> status1 = taskRepository.findByStatusAndBoardId(1, tbId);
-		List<Task> status2 = taskRepository.findByStatusAndBoardId(2, tbId);
-		List<Task> status3 = taskRepository.findByStatusAndBoardId(3, tbId);
+		int tbId = ((TaskBoard)session.getAttribute("taskBoardInfo")).getId();
+		List<Task> status1 = taskRepository.findByStatusAndBoardIdAndIsDeleted(1, tbId, 0);
+		List<Task> status2 = taskRepository.findByStatusAndBoardIdAndIsDeleted(2, tbId, 0);
+		List<Task> status3 = taskRepository.findByStatusAndBoardIdAndIsDeleted(3, tbId, 0);
 		mv.addObject("status1", status1);
 		mv.addObject("status2", status2);
 		mv.addObject("status3", status3);
 		
-		mv.setViewName("taskBoard");
+		mv.setViewName("taskBoard");//re
 		return mv;
 	}
 	
@@ -147,8 +154,19 @@ public class TaskController {
 	public ModelAndView deleteTask(
 			@RequestParam("taskId") int taskId,
 			ModelAndView mv) {
-		taskRepository.deleteById(taskId);
-		mv.setViewName("taskBoard");
+		Task task = taskRepository.getOne(taskId);
+		task.setIsDeleted(1);
+		taskRepository.saveAndFlush(task);
+		
+		int tbId = ((TaskBoard)session.getAttribute("taskBoardInfo")).getId();
+		List<Task> status1 = taskRepository.findByStatusAndBoardIdAndIsDeleted(1, tbId, 0);
+		List<Task> status2 = taskRepository.findByStatusAndBoardIdAndIsDeleted(2, tbId, 0);
+		List<Task> status3 = taskRepository.findByStatusAndBoardIdAndIsDeleted(3, tbId, 0);
+		mv.addObject("status1", status1);
+		mv.addObject("status2", status2);
+		mv.addObject("status3", status3);
+		
+		mv.setViewName("taskBoard");//re
 		return mv;
 	}
 }

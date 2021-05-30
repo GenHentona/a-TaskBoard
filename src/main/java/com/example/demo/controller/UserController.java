@@ -34,6 +34,7 @@ public class UserController {
 	//show loginPage
 	@RequestMapping("/")
 	public String login() {
+		//
 		session.invalidate();
 		return "top";
 	}
@@ -51,7 +52,7 @@ public class UserController {
 			return mv;
 		}
 		//IDが存在しない場合エラー
-		if (userRepository.checkID(loginId) != true) {
+		if (userRepository.findByLoginId(loginId) == null) {
 			mv.addObject("message", "このIDは存在しません");
 			mv.setViewName("top");
 			return mv;
@@ -61,17 +62,20 @@ public class UserController {
 		//ログインIDとパスが一致したらセッションスコープにログイン情報を保管し、マイページへ遷移
 		String checkPass = userRepository.findByLoginId(loginId).getPassword();
 		if (checkPass.equals(password)) {
-			session.setAttribute("userName", userRepository.findByLoginId(loginId).getName());
-			session.setAttribute("userId", userRepository.findByLoginId(loginId).getId());
-			session.setAttribute("loginId", loginId);
-			List<BelongsToTB> bList = belongsToTBRepository.findByUserId(
-					userRepository.findByLoginId(loginId).getId());
-			if (bList != null) {//所属するタスクボードがあれば
+			
+			//まとめてセッションに入れる
+			session.setAttribute("userInfo", userRepository.findByLoginId(loginId));
+			
+			List<BelongsToTB> bList = belongsToTBRepository.findByKeyUserIdAndIsDeleted(
+					userRepository.findByLoginId(loginId).getId(), 0);
+			
+			//空かどうかsizeで確認
+			if (bList.size() != 0) {//所属するタスクボードがあれば
 				mv.addObject("group", bList);
 			}else {
 				mv.addObject("message", "表示するタスクボードはありません");
 			}
-			mv.setViewName("mypage");
+			mv.setViewName("mypage");//redirect利用
 			return mv;
 		}else { //IDとパスワードが一致しない場合エラー
 			mv.addObject("message", "正しいユーザ情報を入力してください");
@@ -100,15 +104,20 @@ public class UserController {
 			mv.setViewName("new-user");
 			return mv;
 		}
-		//ログインIDが被らないようにログインIDがすでに存在していればエラー
-		if (userRepository.checkID(loginId) == true) {
+		//ログインIDが被らないようにログインIDがすでに存在していればエラー　
+		if (userRepository.findByLoginId(loginId) != null) {//いらない
 			mv.addObject("message", "このIDは既に存在しています");
 			mv.setViewName("new-user");
 			return mv;
 		}
 		
-		userRepository.saveAndFlush(new User(userName,loginId,password));
-		mv.setViewName("top");
+		int id = userRepository.saveAndFlush(new User(userName,loginId,password)).getId();
+		User user = userRepository.getOne(id);
+		user.setCreatedBy(id);
+		userRepository.saveAndFlush(user);
+		
+		mv.addObject("message", "ユーザ情報の登録が完了しました。ログインしてください。");//session
+		mv.setViewName("top");//redirect
 		return mv;
 	}
 	
@@ -116,7 +125,7 @@ public class UserController {
 	@RequestMapping(value="/logout")
 	public String logout() {
 		session.invalidate();
-		return login();
+		return login();//redirect
 	}
 	
 	//ユーザ情報変更ボタンからユーザ情報変更ページへ
@@ -140,23 +149,21 @@ public class UserController {
 			return mv;
 		}
 		//ログインIDが被らないようにログインIDがすでに存在していればエラー
-		if (userRepository.checkID(loginId) == true) {
+		if (userRepository.findByLoginId(loginId) != null) {
 			mv.addObject("message", "このIDは既に存在しています");
 			mv.setViewName("edit-user");
 			return mv;
 		}
-		int userId = (int) session.getAttribute("userId");
-		User a = userRepository.findById(userId);
-		a.setName(userName);
-		a.setPassword(password);
-		a.setLoginId(loginId);
-		a.setCreatedBy(userId);
-		a.setUpdatedBy(userId);
-		a.setUpdatedAt();
-		userRepository.saveAndFlush(a);
-		mv.addObject("message", "ユーザ情報の変更が完了しました。ログインしてください。");
+		User user = (User) session.getAttribute("userInfo");
+		user.setName(userName);
+		user.setPassword(password);
+		user.setLoginId(loginId);
+		user.setUpdatedBy(user.getId());
+		user.setUpdatedAt();
+		userRepository.saveAndFlush(user);
+		mv.addObject("message", "ユーザ情報の変更が完了しました。ログインしてください。");//session
 		session.invalidate();
-		mv.setViewName("top");
+		mv.setViewName("top");//redirect
 		return mv;
 	}
 		

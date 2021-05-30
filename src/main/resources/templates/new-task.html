@@ -3,26 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <title>タスク追加</title>
+<link rel="stylesheet" type="text/css" href="/cascade.css">
 </head>
 <body>
 
 <h2>新しいタスクを作成してください</h2>
 
 <form action="/newTask" method="post">
-    　　タイトル：
+    　　<div class="text">タイトル</div>
 	<input type="text" name="title"><br>
-	作業内容：
+	<div class="text">作業内容</div>
 	<textarea name="contents"></textarea><br>
-	優先順位：
+	<div class="text">優先順位</div>
 	<input type="text" name="priority"><br>
-	作業量：
+	<div class="text">作業量</div>
 	<input type="text" name="storyPoint"><br>
-	完了基準：
+	<div class="text">完了基準</div>
 	<textarea name="completionCriteria"></textarea><br>
 	<input type="submit" value="作成"> 
 	<br>
 </form>
-	<span th:text="${message}" style="color:red"></span>
+	<div class="text"><span th:text="${message}" style="color:red"></span></div>
 
 
 </body>

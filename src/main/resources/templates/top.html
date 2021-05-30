@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>ログイン</title>
+<link rel="stylesheet" type="text/css" href="/cascade.css">
 </head>
 <body>
 
@@ -10,16 +11,22 @@
 
 
 <form action="/login" method="post">
-　　　ログインID：
+<div class="input">
+　　　<div class="text">ログインID</div>
 	<input type="text" name="loginId"><br>
-	パスワード：
+</div>
+<div class="input">
+	<div class="text">パスワード</div>
 	<input type="password" name="password"><br>
+</div>
 	<input type="submit" value="ログイン">
 	<br>
 	<span th:text="${message}" style="color:red"></span><br>
 </form>
 
-<a href="/newUser">新規登録</a>
+<div class="link">
+	<a href="/newUser" id="aTag">新規登録</a>
+</div>
 
 </body>
 </html>

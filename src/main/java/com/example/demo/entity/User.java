@@ -42,6 +42,7 @@ public class User {
 	
 	//新規作成
 	public User(String name, String loginId, String password) {
+		this.isDeleted = 0;
 		this.createdAt = new Timestamp(System.currentTimeMillis());
 		this.createdBy = 0;
 		this.updatedAt = new Timestamp(System.currentTimeMillis());
@@ -49,7 +50,6 @@ public class User {
 		this.loginId = loginId;
 		this.password = password;
 		this.name = name;
-		
 	}
 	
 	

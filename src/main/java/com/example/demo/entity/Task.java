@@ -48,17 +48,18 @@ public class Task {
 	private String priority;
 	
 	@Column(name="story_point")
-	private int storyPoint;
+	private String storyPoint;
 	
 	@Column(name="completion_criteria")
 	private String completionCriteria;
 	
 
 	public Task(String title, String contents, 
-				String priority, int storyPoint, 
-				String completionCriteria, int status, 
+				String priority, String storyPoint, 
+				String completionCriteria,  int status, 
 				int boardId) {
 		this.boardId = boardId;
+		this.isDeleted = 0;
 		this.createdAt = new Timestamp(System.currentTimeMillis());
 		this.createdBy = 0;
 		this.updatedAt = new Timestamp(System.currentTimeMillis());
@@ -141,10 +142,10 @@ public class Task {
 	public void setPriority(String priority) {
 		this.priority = priority;
 	}
-	public int getStoryPoint() {
+	public String getStoryPoint() {
 		return storyPoint;
 	}
-	public void setStoryPoint(int storyPoint) {
+	public void setStoryPoint(String storyPoint) {
 		this.storyPoint = storyPoint;
 	}
 	public String getCompletionCriteria() {

@@ -3,17 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <title>ユーザ情報変更</title>
+<link rel="stylesheet" type="text/css" href="/cascade.css">
 </head>
 <body>
 
 <h2>ユーザ情報変更</h2>
 
 <form action="/editUser" method="post">
-	新しいユーザ名：
+	<div class="text">新しいユーザ名</div>
 	<input type="text" name="userName"><br>
-	新しいログインID：
+	<div class="text">新しいログインID</div>
 	<input type="text" name="loginId"><br>
-	新しいパスワード：
+	<div class="text">新しいパスワード</div>
 	<input type="password" name="password"><br>
 	
 	<input type="submit" value="変更">

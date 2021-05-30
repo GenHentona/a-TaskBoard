@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <title>マイページ</title>
+<link rel="stylesheet" type="text/css" href="/cascade.css">
 </head>
 <body>
-
-<span th:text="${session.userName}"></span>さん、お帰りなさい！
+<div class="text">
+	<span th:text="${session.userInfo.name}"></span>さん、お帰りなさい！
+</div>
 
 <!-- タスクボード作成ボタン -->
 <form action="/newTaskBoard" method="get">
@@ -19,20 +21,21 @@
 </form>
 
 <!-- 自身が所属するタスクボード一覧 -->
-
 <table border="1">
 	<caption>あなたが所属するタスクボード一覧</caption>
 	<tr><th>名前<th>削除</tr>
-	<tr th:each="list:${group}">
-		<td><a th:href="'/taskBoard/'+${list.boardId}"><span th:text="${list.boardId}"></span></a>
-		<td><a th:href="'/withdraw/'+${list.boardId}">削除</a>
+	<tr th:each="belongsBoard:${group}">
+		<td><a th:href="'/taskBoard/'+${belongsBoard.key.boardId}"><span th:text="${belongsBoard.board.name}"></span></a>
+		<td><a th:href="'/withdraw/'+${belongsBoard.key.boardId}">削除</a>
 	</tr>
 </table><br>
-<span th:text="${message}" style="color:red"></span><br>
+<div class="text"><span th:text="${message}" style="color:red"></span></div>
 
 
 <!-- ログアウトURL -->
-<a href="/logout">ログアウト</a>
+<div class="link">
+	<a href="/logout">ログアウト</a>
+</div>
 
 </body>
 </html>

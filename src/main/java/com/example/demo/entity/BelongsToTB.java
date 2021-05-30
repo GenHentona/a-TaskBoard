@@ -3,25 +3,21 @@ package com.example.demo.entity;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.example.demo.entity.key.BelongsKey;
+
 
 @Entity
 @Table(name="belong_boards")
 public class BelongsToTB {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="board_id")
-	private int boardId;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="user_id")
-	private int userId;
+	@EmbeddedId
+	private BelongsKey key;
 	
 	@Column(name="is_deleted")
 	private Integer isDeleted;
@@ -38,6 +34,14 @@ public class BelongsToTB {
 	@Column(name="updated_by")
 	private int updatedBy = 0;
 	
+	@ManyToOne
+	@JoinColumn(name="board_id", referencedColumnName = "id", insertable = false, updatable = false)
+	private TaskBoard board;
+	
+	@ManyToOne
+	@JoinColumn(name="user_id", referencedColumnName = "id", insertable = false, updatable = false)
+	private User user;
+	
 	public BelongsToTB() {
 		
 	}
@@ -45,31 +49,52 @@ public class BelongsToTB {
 	
 
 	public BelongsToTB(int boardId, int userId) {
-		this.boardId = boardId;
-		this.userId = userId;
+		this.key = new BelongsKey(boardId, userId);
+		this.isDeleted = 0;
 		this.createdAt = new Timestamp(System.currentTimeMillis());
 		this.createdBy = 0;
 		this.updatedAt = new Timestamp(System.currentTimeMillis());
 		this.updatedBy = 0;
 	}
+	
+	
 
 
-
-	public int getBoardId() {
-		return boardId;
+	public User getUser() {
+		return user;
 	}
 
-	public void setBoardId(int boardId) {
-		this.boardId = boardId;
+
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
-	public int getUserId() {
-		return userId;
+
+
+	public TaskBoard getBoard() {
+		return board;
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+
+
+	public void setBoard(TaskBoard board) {
+		this.board = board;
 	}
+
+
+
+	public BelongsKey getKey() {
+		return key;
+	}
+
+
+
+	public void setKey(BelongsKey key) {
+		this.key = key;
+	}
+
+
 
 	public Integer getIsDeleted() {
 		return isDeleted;

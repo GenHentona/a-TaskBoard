@@ -3,21 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <title>新規登録</title>
+<link rel="stylesheet" type="text/css" href="/cascade.css">
 </head>
 <body>
 
 <h2>新規登録</h2>
 
 <form action="/newUser" method="post">
-    　　ユーザ名：
+<div class="input">
+    　　<div class="text">ユーザ名</div>
 	<input type="text" name="userName"><br>
-	ログインID：
+</div>
+<div class="input">
+	<div class="text">ログインID</div>
 	<input type="text" name="loginId"><br>
-	パスワード：
+</div>
+<div class="input">
+	<div class="text">パスワード</div>
 	<input type="password" name="password"><br>
+</div>
+<div class="input">
 	<input type="submit" value="登録">
 	<br>
 	<span th:text="${message}" style="color:red"></span>
+</div>
 </form>
 
 

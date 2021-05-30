@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>タスクボード管理</title>
+<link rel="stylesheet" type="text/css" href="/cascade.css">
 </head>
 <body>
 
@@ -10,30 +11,37 @@
 
 <!-- タスクボード名変更フォーム -->
 <form action="/editTBname" method="post">
-	タスクボード名の変更：
+	<div class="text">タスクボード名の変更</div>
 	<input type="text" name="tbName">
 	<input type="submit" value="変更">
 	<br>
-	<span th:text="${message}" style="color:red"></span>
+	<span th:text="${message1}" style="color:red"></span>
 </form>
 
 <!-- メンバー追加フォーム (現段階では一人ずつしかできない)-->
 <form action="/addMember" method="post">
-	メンバーの追加：
-	<input type="text" name="loginId">
+	<div class="text">メンバーの追加</div>
+	<input type="text" name="loginId" placeholder="追加するユーザのＩＤ">
 	<input type="submit" value="追加">
 	<br>
-	<span th:text="${message}" style="color:red"></span>
+	<span th:text="${message2}" style="color:red"></span>
 </form>
 
 <!-- メンバー一覧 -->
-<table border="1">
+<table border="1" class="table2">
+	<caption>メンバー一覧</caption>
 	<tr><th>名前<th>削除</tr>
-	<tr th:each="member:${group}">
-		<td th:text="${member.userId}">
-		<th><a th:href="'/deleteMember/'+${member.userId}">削除</a>
+	<tr th:each="belongsBoard:${group}">
+		<td th:text="${belongsBoard.user.name}">
+		<th><a th:href="'/deleteMember/'+${belongsBoard.key.userId}">削除</a>
 	</tr>
 </table>
+
+<br><br><br><br><br><br><br><br><div class="text">このタスクボードを削除する</div><br>
+<form action="/deleteTB" method="get">
+	<input type="hidden" name="taskBoardId" th:value="${session.taskBoardInfo.id}">
+	<input type="submit" value="削除">	
+</form>
 
 </body>
 </html>

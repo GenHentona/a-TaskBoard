@@ -10,5 +10,4 @@ public interface TaskBoardRepository extends JpaRepository<TaskBoard, Integer>{
 	
 	TaskBoard findByName(String tbName);
 
-	TaskBoard findById(int id);
 }

@@ -2,22 +2,18 @@ package com.example.demo.repository;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.BelongsToTB;
+import com.example.demo.entity.key.BelongsKey;
 
 @Repository
-public interface BelongsToTBRepository extends JpaRepository<BelongsToTB, Integer>{
+public interface BelongsToTBRepository extends JpaRepository<BelongsToTB, BelongsKey>{
 	
-	BelongsToTB findByBoardIdAndUserId(int a, int b);
+	public List<BelongsToTB> findByKeyUserId(int userId);
+	public List<BelongsToTB> findByKeyBoardIdAndIsDeleted(int boardId, int isDeleted);
 	
-	List<BelongsToTB> findByBoardId(int c);
-	
-	List<BelongsToTB> findByUserId(int c);
+	BelongsToTB findByKeyBoardIdAndKeyUserId(int boardId, int userId);
+	public List<BelongsToTB> findByKeyUserIdAndIsDeleted(Integer id, int i);
 }

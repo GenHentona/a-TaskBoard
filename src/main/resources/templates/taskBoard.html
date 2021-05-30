@@ -3,19 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <title>タスクボード</title>
+<link rel="stylesheet" type="text/css" href="/cascade.css">
 <style>
     .flex {
       display: flex;
     }
-    
     .table{
     	width: 200px
     }
 </style>
 </head>
 <body>
-
-<span th:text="${session.tbName}"></span>
+<div class="tbName">
+	<span th:text="${session.taskBoardInfo.name}"></span>
+</div>
 
 <!-- タスク作成ボタン -->
 <form action="/newTask" method="get">
@@ -34,17 +35,17 @@
 
 <!-- タスクボード表示 -->
 <div class="flex">
-<table border="1">
+<table border="1" class="table1">
 <tr><th class="table">ToDo</tr>
 <tr th:each="task:${status1}">
 	<td>
 		<ul>
-			<li th:text="${task.title}">
-			<li th:text="${task.name}">
-			<li th:text="${task.contents}">
-			<li th:text="${task.priority}">
-			<li th:text="${task.storyPoint}">
-			<li th:text="${task.completionCriteria}">
+			<li th:text="'タイトル: ' + ${task.title}">
+			<!--  <li th:text="'作業者名: ' + ${task.user.name}">-->
+			<li th:text="'作業内容: '+${task.contents}">
+			<li th:text="'優先順位: '+${task.priority}">
+			<li th:text="'作業量: '+${task.storyPoint}">
+			<li th:text="'完了基準: '+${task.completionCriteria}">
 		</ul>
 		<!-- タスク編集ボタン -->
 		<form action="/editTask" method="get">
@@ -60,17 +61,17 @@
 	</td>
 </tr>
 </table>
-<table border="1">
+<table border="1"class="table1">
 <tr><th class="table">Doing</tr>
 <tr th:each="task:${status2}">
 	<td>
 		<ul>
-			<li th:text="${task.title}">
-			<li th:text="${task.name}">
-			<li th:text="${task.contents}">
-			<li th:text="${task.priority}">
-			<li th:text="${task.storyPoint}">
-			<li th:text="${task.completionCriteria}">
+			<li th:text="'タイトル: ' + ${task.title}">
+			<!--  <li th:text="'作業者名: ' + ${task.user.name}">-->
+			<li th:text="'作業内容: '+${task.contents}">
+			<li th:text="'優先順位: '+${task.priority}">
+			<li th:text="'作業量: '+${task.storyPoint}">
+			<li th:text="'完了基準: '+${task.completionCriteria}">
 		</ul>
 		<!-- タスクステータス変更 -->
 		<form action="/editStatus" method="get">
@@ -92,17 +93,17 @@
 	</td>
 </tr>
 </table>
-<table border="1">
+<table border="1"class="table1">
 <tr><th class="table">Done</tr>
 <tr th:each="task:${status3}">
 	<td>
 		<ul>
-			<li th:text="${task.title}">
-			<li th:text="${task.name}">
-			<li th:text="${task.contents}">
-			<li th:text="${task.priority}">
-			<li th:text="${task.storyPoint}">
-			<li th:text="${task.completionCriteria}">
+			<li th:text="'タイトル: ' + ${task.title}">
+			<!--  <li th:text="'作業者名: ' + ${task.user.name}">-->
+			<li th:text="'作業内容: '+${task.contents}">
+			<li th:text="'優先順位: '+${task.priority}">
+			<li th:text="'作業量: '+${task.storyPoint}">
+			<li th:text="'完了基準: '+${task.completionCriteria}">
 		</ul>
 		<!-- タスクステータス変更 -->
 		<form action="/editStatus" method="get">

@@ -10,7 +10,6 @@ import com.example.demo.entity.Task;
 @Repository
 public interface TaskRepository  extends JpaRepository<Task, Integer>{
 	
-	Task findById(int id);
 	
-	List<Task> findByStatusAndBoardId(int status, int boardId);
+	List<Task> findByStatusAndBoardIdAndIsDeleted(int status, int boardId, int dFlag);
 }

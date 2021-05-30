@@ -3,23 +3,22 @@ package com.example.demo.entity;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.example.demo.entity.key.AssignmentKey;
+
 @Entity
-@Table(name="boards")
-public class TaskBoard {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
-	private Integer id;
+@Table(name="assignment_tasks")
+public class AssignmentTasks {
+	@EmbeddedId
+	private AssignmentKey key;
 	
 	@Column(name="is_deleted")
-	private int isDeleted = 0;
+	private Integer isDeleted;
 	
 	@Column(name="created_at")
 	private Timestamp createdAt;
@@ -33,35 +32,59 @@ public class TaskBoard {
 	@Column(name="updated_by")
 	private int updatedBy = 0;
 	
-	@Column(name="name")
-	private String name;
+	@ManyToOne
+	@JoinColumn(name="user_id", referencedColumnName = "id", insertable = false, updatable = false)
+	private User user;
 	
-	public TaskBoard() {
-		
-	}
+	@ManyToOne
+	@JoinColumn(name="task_id", referencedColumnName = "id", insertable = false, updatable = false)
+	private Task task;
 	
-	public TaskBoard(String name) {
-		this.name = name;
+	
+	public AssignmentTasks(int taskId, int userId) {
+		this.key = new AssignmentKey(taskId, userId);
 		this.isDeleted = 0;
 		this.createdAt = new Timestamp(System.currentTimeMillis());
 		this.createdBy = 0;
 		this.updatedAt = new Timestamp(System.currentTimeMillis());
 		this.updatedBy = 0;
 	}
-
-	public Integer getId() {
-		return id;
+	
+	public AssignmentTasks() {
+		
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	
+	
+	public User getUser() {
+		return user;
 	}
 
-	public int getIsDeleted() {
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Task getTask() {
+		return task;
+	}
+
+	public void setTask(Task task) {
+		this.task = task;
+	}
+
+	public AssignmentKey getKey() {
+		return key;
+	}
+
+	public void setKey(AssignmentKey key) {
+		this.key = key;
+	}
+
+	public Integer getIsDeleted() {
 		return isDeleted;
 	}
 
-	public void setIsDeleted(int isDeleted) {
+	public void setIsDeleted(Integer isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 
@@ -85,8 +108,8 @@ public class TaskBoard {
 		return updatedAt;
 	}
 
-	public void setUpdatedAt() {
-		this.updatedAt = new Timestamp(System.currentTimeMillis());
+	public void setUpdatedAt(Timestamp updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	public int getUpdatedBy() {
@@ -96,14 +119,6 @@ public class TaskBoard {
 	public void setUpdatedBy(int updatedBy) {
 		this.updatedBy = updatedBy;
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	
 	
 }
